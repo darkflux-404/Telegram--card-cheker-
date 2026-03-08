@@ -1,0 +1,16 @@
+[project]
+name = "repl-nix-workspace"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.12"
+dependencies = [
+    "aiohttp>=3.13.3",
+    "httpx>=0.28.1",
+    "huepy>=1.2.1",
+    "multicolorcaptcha>=1.2.0",
+    "pyromod>=3.1.6",
+    "python-dotenv>=1.2.2",
+    "requests>=2.32.5",
+    "tgcrypto>=1.2.5",
+    "validators>=0.35.0",
+]
