@@ -9,14 +9,19 @@ from utilsdf.functions import bot_on
 from utilsdf.db import Database
 from utilsdf.vars import PREFIXES
 
-# TODO: Replace with your credentials or use environment variables
-# Get your API credentials from https://my.telegram.org
-# Get your bot token from @BotFather on Telegram
-API_ID = int(getenv('TELEGRAM_API_ID'))
+# 🔹 Cargar variables de entorno
+API_ID = getenv('TELEGRAM_API_ID')
 API_HASH = getenv('TELEGRAM_API_HASH')
 BOT_TOKEN = getenv('TELEGRAM_BOT_TOKEN')
-CHANNEL_LOGS = getenv('TELEGRAM_CHANNEL_LOGS')
+CHANNEL_LOGS = getenv('TELEGRAM_CHANNEL_LOGS')  # opcional
 
+# 🔹 Validaciones básicas
+if not API_ID or not API_HASH or not BOT_TOKEN:
+    raise ValueError("Faltan variables de entorno obligatorias en Replit Secrets")
+
+API_ID = int(API_ID)  # convertir a int solo después de validar
+
+# 🔹 Inicializar el cliente Pyrogram
 app = Client(
     "bot",
     api_id=API_ID,
@@ -31,6 +36,7 @@ logging.basicConfig(level=logging.INFO)
 logging.getLogger("httpx").setLevel(logging.CRITICAL)
 
 
+# 🔹 Callback queries
 @app.on_callback_query()
 async def warn_user(client: Client, callback_query: CallbackQuery):
     if callback_query.message.reply_to_message.from_user and (
@@ -42,18 +48,19 @@ async def warn_user(client: Client, callback_query: CallbackQuery):
     await callback_query.continue_propagation()
 
 
+# 🔹 Manejo de mensajes de usuarios
 @app.on_message(filters.text)
 async def user_ban(client: Client, m: Message):
 
-    if not m.from_user:
+    if not m.from_user or not m.text:
         return
-    if not m.text:
-        return
+
     try:
         if not m.text[0] in PREFIXES:
             return
     except UnicodeDecodeError:
         return
+
     chat_id = m.chat.id
     with Database() as db:
         if chat_id == -1001494650944:
@@ -71,15 +78,12 @@ async def user_ban(client: Client, m: Message):
                 if db.user_has_credits(user_id):
                     continue
                 await m.chat.ban_member(user_id)
-                info=db.get_info_user(user_id)
-                await client.send_message(-1001494650944, f"<b>User eliminado: @{info['USERNAME']}</b>")
+                info = db.get_info_user(user_id)
+                
+                # 🔹 Enviar logs solo si CHANNEL_LOGS existe
+                if CHANNEL_LOGS:
+                    await client.send_message(CHANNEL_LOGS, f"<b>User eliminado: @{info['USERNAME']}</b>")
 
-        #         if not db.is_admin(m.from_user.id):
-        #             return await m.reply(
-        #                 """𝘽𝙤𝙩 𝙪𝙣𝙙𝙚𝙧 𝙈𝙖𝙣𝙩𝙚𝙣𝙞𝙚𝙣𝙘𝙚 ⚠️
-        # 𝙍𝙚𝙖𝙨𝙤𝙣 -» <code>Mantenimiento by @Fucker_504</code>
-        #        """
-        #             )
         user_id = m.from_user.id
         username = m.from_user.username
         db.remove_expireds_users()
@@ -90,5 +94,6 @@ async def user_ban(client: Client, m: Message):
         await m.continue_propagation()
 
 
+# 🔹 Ejecutar bot
 if __name__ == "__main__":
     app.run()
