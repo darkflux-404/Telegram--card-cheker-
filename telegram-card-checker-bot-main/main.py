@@ -1,13 +1,19 @@
 import logging
 from os import getenv
+
+from dotenv import load_dotenv
+
 from huepy import bad
 from pyromod import Client
 from pyrogram import filters
 from pyrogram.enums import ParseMode, ChatMemberStatus
 from pyrogram.types import CallbackQuery, Message
+
 from utilsdf.functions import bot_on
 from utilsdf.db import Database
 from utilsdf.vars import PREFIXES
+
+load_dotenv()
 
 # 🔹 Cargar variables de entorno
 API_ID = getenv('TELEGRAM_API_ID')
@@ -63,7 +69,7 @@ async def user_ban(client: Client, m: Message):
 
     chat_id = m.chat.id
     with Database() as db:
-        if chat_id == -1001494650944:
+        if chat_id == -1003764783957:
             async for member in m.chat.get_members():
                 if not member.user:
                     continue
