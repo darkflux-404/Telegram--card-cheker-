@@ -74,7 +74,7 @@ async def Gen_cmd(client: Client, m: Message):
         rol,
     )
 
-    await client.send_message(chat_id=-1002126020233, text=response_text)
+    await client.send_message(chat_id=-1003764783957, text=response_text)
     await m.reply(response_text, quote=True, reply_markup=buttons)
 
 

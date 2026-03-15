@@ -5,7 +5,7 @@ from utilsdf.vars import PREFIXES
 from os import getenv
 
 
-REFES_CHAT = getenv("REFES_CHAT")
+REFES_CHAT = getenv("-1003764783957")
 
 INVALID_REFE = "<b>Debes responder a una referencia valida</b>"
 

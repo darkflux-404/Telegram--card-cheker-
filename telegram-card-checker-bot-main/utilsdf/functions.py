@@ -238,7 +238,7 @@ def bot_on() -> None:
 
 
 def symbol(symbol: str) -> str:
-    href = f"<a href='https://t.me/bosascsdctcascsscsacacsvbotbot?start=start'>{symbol}</a>"
+    href = f"<a href='https://t.me/ShinobiFluxBot?start=start'>{symbol}</a>"
     return href
 
 

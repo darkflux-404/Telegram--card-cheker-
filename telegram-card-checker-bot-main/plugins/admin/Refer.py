@@ -6,7 +6,7 @@ from utilsdf.db import Database
 from os import getenv
 
 
-CHANNEL_REFES = getenv("CHANNEL_OFFICIAL")
+CHANNEL_REFES = getenv("-1003764783957")
 
 INVALID_REFE = "<b>Debes responder a una referencia valida</b>"
 
